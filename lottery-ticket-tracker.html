@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Lottery Pool Club</title>
+<style>
+  :root{
+    --bg:#f7f7f5;
+    --surface:#ffffff;
+    --surface-2:#f3f4f6;
+    --text:#111827;
+    --muted:#6b7280;
+    --faint:#9ca3af;
+    --border:#e5e7eb;
+    --border-strong:#d1d5db;
+    --red:#dc2626;
+    --red-dark:#b91c1c;
+    --ball:#111827;
+    --ball-text:#fff;
+    --green:#047857;
+    --shadow:0 1px 3px rgba(0,0,0,.06),0 10px 30px rgba(0,0,0,.06);
+    --radius:16px;
+    --radius-sm:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b0f17;
+      --surface:#151a24;
+      --surface-2:#1e2533;
+      --text:#f3f4f6;
+      --muted:#9ca3af;
+      --faint:#6b7280;
+      --border:#263043;
+      --border-strong:#334155;
+      --ball:#f3f4f6;
+      --ball-text:#111827;
+      --shadow:0 1px 3px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family: ui-sans-system, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased}
+  a{color:var(--muted)}
+  button,input,select{font:inherit}
+  .wrap{max-width:920px;margin:0 auto;padding:20px 16px 40px}
+  /* lock */
+  .lock-wrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px 16px}
+  .lock-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);width:100%;max-width:420px;padding:28px 24px 22px}
+  .lock-icon{width:48px;height:48px;border-radius:999px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+  @media (prefers-color-scheme: dark){ .lock-icon{background:#f3f4f6;color:#111827} }
+  .lock-card h1{font-size:24px;line-height:1.1;letter-spacing:-.02em;margin:0 0 6px;font-weight:700}
+  .lock-card p{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
+  .field{margin-top:16px}
+  label{display:block;font-size:13px;font-weight:600;letter-spacing:.01em;margin-bottom:6px;color:var(--text)}
+  input[type="password"],input[type="text"],input[type="number"],input[type="date"],select{
+    width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);font-size:16px;outline:none;min-height:48px;
+  }
+  input:focus,select:focus{border-color:var(--text)}
+  .btn{appearance:none;border:0;border-radius:999px;padding:12px 18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px}
+  .btn-primary{background:var(--text);color:var(--bg);width:100%;margin-top:18px}
+  @media (prefers-color-scheme: dark){ .btn-primary{background:#f3f4f6;color:#111827} }
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+  .btn-small{min-height:40px;padding:8px 14px;font-size:14px}
+  .error{margin-top:10px;color:#dc2626;font-size:14px;line-height:1.4;min-height:20px}
+  .hint{margin-top:12px;font-size:13px;color:var(--muted);text-align:center}
+  .reset{margin-top:18px;text-align:center}
+  .reset button{background:none;border:0;color:var(--muted);font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px}
+  .confirm-box{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:left}
+  .confirm-box p{font-size:14px;color:var(--text)}
+  .confirm-actions{display:flex;gap:8px;margin-top:12px}
+  .confirm-actions .btn{flex:1}
+  .btn-danger{background:#dc2626;color:#fff}
+  /* header */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .topbar-left{display:flex;align-items:center;gap:10px;min-width:0}
+  .dot{width:10px;height:10px;border-radius:999px;background:#10b981;flex-shrink:0}
+  .topbar-left span{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .lock-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:9px 14px;font-weight:600;font-size:14px;cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+  /* cards / sections */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+  .card h2{margin:0;font-size:20px;letter-spacing:-.02em;line-height:1.2}
+  .summary{margin-top:6px;color:var(--muted);font-size:14px;line-height:1.5}
+  .section-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+  .reminder-banner{margin-bottom:16px;padding:14px 16px;border-radius:12px;background:#fef3c7;border:1.5px solid #f59e0b;color:#92400e;font-weight:800;font-size:15px;line-height:1.45}
+  @media (prefers-color-scheme: dark){ .reminder-banner{background:#451a03;border-color:#b45309;color:#fcd34d} }
+  .budget-pill{display:inline-flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:600;white-space:nowrap}
+  .budget-pill strong{font-weight:800}
+  /* tables */
+  .table-wrap{overflow:hidden;border:1px solid var(--border);border-radius:12px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--border)}
+  tbody td{padding:12px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  .num{font-variant-numeric:tabular-nums}
+  .balls{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .ball{width:32px;height:32px;border-radius:999px;background:var(--ball);color:var(--ball-text);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;line-height:1;flex-shrink:0;border:1px solid rgba(0,0,0,.08)}
+  .ball.red{background:var(--red);color:#fff;border-color:transparent}
+  .ball.small{width:28px;height:28px;font-size:12px}
+  .pending{color:var(--faint);font-style:italic;font-size:13px}
+  .play-num{font-weight:800;width:28px}
+  /* form */
+  .form-grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:640px){
+    .form-grid{grid-template-columns:1.2fr .6fr}
+    .form-grid .full{grid-column:1/-1}
+    .form-grid-3{grid-template-columns:1fr 1fr 1fr}
+  }
+  .form-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+  .add-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .add-row .btn-primary{width:auto;flex:1;margin-top:0}
+  @media(min-width:640px){ .add-row .btn-primary{flex:0 0 auto;padding-left:22px;padding-right:22px} }
+  .empty{padding:20px;text-align:center;color:var(--muted);font-size:14px}
+  .delete-btn{background:transparent;border:1px solid var(--border);width:36px;height:36px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px;line-height:1}
+  .delete-btn:hover{border-color:#fca5a5;color:#dc2626;background:#fef2f2}
+  @media (prefers-color-scheme: dark){ .delete-btn:hover{background:#2a1215} }
+  .foot{margin-top:20px;text-align:center;font-size:12px;color:var(--faint);line-height:1.5;padding:0 8px}
+  .hidden{display:none !important}
+  .contrib-table th:nth-child(2){width:92px}
+  .contrib-table th:nth-child(3){width:116px}
+  .contrib-table th:nth-child(4){width:92px}
+  .planned-table tbody tr{background:var(--surface-2)}
+  .planned-table tbody td{color:var(--muted)}
+  .status-planned{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:600;white-space:nowrap}
+  .status-purchased{display:inline-block;padding:3px 10px;border-radius:999px;background:#ecfdf5;border:1px solid #a7f3d0;color:var(--green);font-size:12px;font-weight:600;white-space:nowrap}
+  @media (prefers-color-scheme: dark){ .status-purchased{background:#0b2a1f;border-color:#14532d;color:#6ee7b7} }
+  /* winnings summary */
+  .winnings-banner{display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:16px}
+  .winnings-banner.has-wins{background:linear-gradient(120deg,#fef3c7 0%,#fef9c3 45%,#dcfce7 100%);border:2px solid #f59e0b}
+  .winnings-main{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .winnings-label{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .winnings-banner.has-wins .winnings-label{color:#92400e}
+  .winnings-total{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1}
+  .winnings-banner.has-wins .winnings-total{color:#047857}
+  .winnings-detail{color:var(--muted);font-size:14px;line-height:1.45}
+  .winnings-banner.has-wins .winnings-detail{color:#44403c}
+  @media (prefers-color-scheme: dark){
+    .winnings-banner.has-wins{background:linear-gradient(120deg,#451a03 0%,#3f3003 45%,#052e1b 100%);border-color:#d97706}
+    .winnings-banner.has-wins .winnings-label{color:#fcd34d}
+    .winnings-banner.has-wins .winnings-total{color:#6ee7b7}
+    .winnings-banner.has-wins .winnings-detail{color:#d6d3d1}
+  }
+  /* winning draw rows */
+  tr.win-row td{background:linear-gradient(90deg,#fef3c7,#ecfdf5);border-top:2px solid #f59e0b;border-bottom:2px solid #f59e0b}
+  tr.win-row td:first-child{box-shadow:inset 5px 0 0 #059669}
+  @media (prefers-color-scheme: dark){ tr.win-row td{background:linear-gradient(90deg,#3f3003,#052e1b)} }
+  .win-line{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+  .win-badge{display:inline-block;padding:3px 10px;border-radius:999px;background:#f59e0b;color:#1c1005;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .win-prize{font-size:22px;font-weight:800;color:var(--green);letter-spacing:-.01em;margin-left:6px}
+  @media (prefers-color-scheme: dark){ .win-prize{color:#34d399} }
+  /* mobile table tweaks */
+  @media(max-width:560px){
+    .card{padding:16px}
+    thead th, tbody td{padding:10px 10px}
+    .ball{width:30px;height:30px;font-size:12px}
+    .wrap{padding:14px 12px 32px}
+    .contrib-table th,.contrib-table td{padding:8px 6px;font-size:13px}
+    .contrib-table th{font-size:11px;letter-spacing:.03em}
+    .contrib-table th:nth-child(2){width:60px}
+    .contrib-table th:nth-child(3){width:72px}
+    .contrib-table th:nth-child(4){width:76px}
+    .purchased-table th,.purchased-table td{padding:8px 5px;font-size:12px}
+    .purchased-table th{font-size:11px;letter-spacing:.03em}
+    .purchased-table td:first-child{white-space:normal !important}
+    /* stack club purchase row on phones so number balls fit */
+    .purchased-table thead{display:none}
+    .purchased-table,.purchased-table tbody,.purchased-table tr,.purchased-table td{display:block;width:100%}
+    .purchased-table tr{padding:12px 12px 8px;border-bottom:1px solid var(--border)}
+    .purchased-table tr:last-child{border-bottom:0}
+    .purchased-table td{padding:4px 0;border-bottom:0;white-space:normal !important;font-size:13px}
+    .purchased-table td:first-child{font-size:14px;padding-bottom:8px}
+    .purchased-table td:nth-child(3),.purchased-table td:nth-child(4),.purchased-table td:nth-child(5){display:inline-block;width:auto;margin-right:14px;vertical-align:top}
+    .purchased-table td:nth-child(6){display:none}
+    .planned-table th,.planned-table td{padding:8px 6px;font-size:12px}
+    .planned-table th{font-size:11px;letter-spacing:.03em}
+    .planned-table .status-purchased,.planned-table .status-planned{font-size:11px;padding:3px 7px;white-space:normal;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lockView" class="lock-wrap">
+  <div class="lock-card" role="main" aria-labelledby="lockTitle">
+    <div class="lock-icon" aria-hidden="true">🔒</div>
+    <h1 id="lockTitle">Lottery Pool Club</h1>
+    <p id="lockSubtitle">This tracker is locked. Enter the club password to continue.</p>
+
+    <form id="enterForm" novalidate>
+      <div class="field">
+        <label for="enterPw">Password</label>
+        <input id="enterPw" type="password" autocomplete="current-password" placeholder="Enter your password" />
+      </div>
+      <div id="enterError" class="error" role="alert" aria-live="polite"></div>
+      <button type="submit" class="btn btn-primary">Unlock</button>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appView" class="hidden">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="topbar-left"><span class="dot" aria-hidden="true"></span><span>Lottery Pool Club</span></div>
+      <button id="lockBtn" class="lock-btn" type="button">🔒 Lock</button>
+    </div>
+
+    <!-- Winnings summary -->
+    <div id="winningsBanner" class="winnings-banner" role="status" aria-label="Winnings summary">
+      <div class="winnings-main">
+        <span class="winnings-label">Total winnings</span>
+        <span class="winnings-total num" id="winningsTotal">$0.00</span>
+      </div>
+      <div class="winnings-detail" id="winningsDetail">No winning draws yet.</div>
+    </div>
+
+    <!-- Section 1 -->
+    <section class="card" aria-labelledby="s1title">
+      <div class="section-head">
+        <div>
+          <h2 id="s1title">My Powerball · 10-draw run</h2>
+          <p class="summary">5 plays · $2 per play · 10 draws · $100 total · no Power Play</p>
+        </div>
+      </div>
+
+      <div class="table-wrap" role="region" aria-label="My plays">
+        <table>
+          <thead><tr><th style="width:52px">Play</th><th>White balls</th><th style="width:96px">Powerball</th></tr></thead>
+          <tbody id="playsBody"></tbody>
+        </table>
+      </div>
+
+      <h3 style="margin:22px 0 10px;font-size:15px;letter-spacing:-.01em">Draw schedule &amp; results</h3>
+      <div class="table-wrap" role="region" aria-label="Draw schedule and results">
+        <table>
+          <thead><tr><th>Draw</th><th>Winning numbers</th><th>Best result</th></tr></thead>
+          <tbody id="drawsBody"></tbody>
+        </table>
+      </div>
+      <p class="form-note" style="margin-top:10px">Draws are Wed / Sat / Mon nights. Winning numbers will be filled in after each draw.</p>
+    </section>
+
+    <!-- Club Mega Millions -->
+    <section class="card" aria-labelledby="mmTitle">
+      <div id="mmReminder" class="reminder-banner hidden" role="note"></div>
+      <div class="section-head">
+        <div>
+          <h2 id="mmTitle">Club Mega Millions · 10-draw run</h2>
+          <p class="summary">3 plays · $5 per play · 10 draws · $150 total · built-in multipliers as printed</p>
+        </div>
+      </div>
+
+      <div class="table-wrap" role="region" aria-label="Mega Millions plays">
+        <table>
+          <thead><tr><th style="width:52px">Play</th><th>White balls</th><th style="width:96px">Mega Ball</th><th style="width:96px">Multiplier</th></tr></thead>
+          <tbody id="mmPlaysBody"></tbody>
+        </table>
+      </div>
+
+      <h3 style="margin:22px 0 10px;font-size:15px;letter-spacing:-.01em">Draw schedule &amp; results</h3>
+      <div class="table-wrap" role="region" aria-label="Mega Millions draw schedule and results">
+        <table>
+          <thead><tr><th>Draw</th><th>Winning numbers</th><th>Best result</th></tr></thead>
+          <tbody id="mmDrawsBody"></tbody>
+        </table>
+      </div>
+      <p class="form-note" style="margin-top:10px">Draws are Tue / Fri nights. Winning numbers will be filled in after each draw.</p>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="card" aria-labelledby="s2title">
+      <div class="section-head">
+        <div>
+          <h2 id="s2title">Lottery club · $870 pot</h2>
+          <p class="summary" id="budgetLine">Spent: $0 · Remaining: $870 of $870</p>
+        </div>
+        <div class="budget-pill" id="budgetPill">Pot $870</div>
+      </div>
+
+      <h3 style="margin:6px 0 10px;font-size:15px;letter-spacing:-.01em">Contributors (29)</h3>
+      <div class="table-wrap" role="region" aria-label="Contributors">
+        <table class="contrib-table">
+          <thead><tr><th>Member</th><th>Amount</th><th>Date collected</th><th>Method</th></tr></thead>
+          <tbody>
+            <tr><td>Ajay Maheshwari</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>PayPal</td></tr>
+            <tr><td>Aruna Tummala</td><td class="num">$30.00</td><td style="white-space:nowrap">10/10/26</td><td>Zelle</td></tr>
+            <tr><td>Asha Vikuntam</td><td class="num">$30.00</td><td style="white-space:nowrap">10/10/26</td><td>Zelle</td></tr>
+            <tr><td>Bala/Usha</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Bhushan Mittal</td><td class="num">$30.00</td><td style="white-space:nowrap">10/12/26</td><td>Zelle</td></tr>
+            <tr><td>Chandar Malayappan</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>PayPal</td></tr>
+            <tr><td>Ck (chandra sekhar Kota)</td><td class="num">$30.00</td><td style="white-space:nowrap">10/12/26</td><td>PayPal</td></tr>
+            <tr><td>DEVOTTA PRAKASH</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Dilip Lewis</td><td class="num">$30.00</td><td style="white-space:nowrap">10/10/26</td><td>Zelle</td></tr>
+            <tr><td>Gopi (Daljit Vudathala)</td><td class="num">$30.00</td><td style="white-space:nowrap">10/10/26</td><td>Zelle</td></tr>
+            <tr><td>Hari (sh bevinahally)</td><td class="num">$30.00</td><td style="white-space:nowrap">10/11/26</td><td>PayPal</td></tr>
+            <tr><td>Jorge Bruniard</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Keki (n Shah)</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Kavitha Maheswaran</td><td class="num">$30.00</td><td style="white-space:nowrap">10/11/26</td><td>PayPal</td></tr>
+            <tr><td>Mukund HD</td><td class="num">$30.00</td><td style="white-space:nowrap">10/10/26</td><td>Zelle</td></tr>
+            <tr><td>RAGHAVENDRA NAGARAJ</td><td class="num">$30.00</td><td style="white-space:nowrap">10/10/26</td><td>Zelle</td></tr>
+            <tr><td>RAJESH PREMSUN</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Rakesh Baman</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>PayPal</td></tr>
+            <tr><td>Rao Donthineni</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>SANJAY KOHLI</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Saji Jacob</td><td class="num">$30.00</td><td style="white-space:nowrap">10/10/26</td><td>Zelle</td></tr>
+            <tr><td>Sridhar (Iyer)</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>SRINIVAS USHA /Vijay</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Nari Narayanan</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Subba Narayanan</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>Sujay Dutta</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Zelle</td></tr>
+            <tr><td>KOMMERA VANIPRASAD</td><td class="num">$30.00</td><td style="white-space:nowrap">10/12/26</td><td>Zelle</td></tr>
+            <tr><td>Vinod Verma</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>PayPal</td></tr>
+            <tr><td>Vishal Awasthi</td><td class="num">$30.00</td><td style="white-space:nowrap">10/9/26</td><td>Cash</td></tr>
+            <tr><td colspan="4" style="font-weight:700;background:var(--surface-2)">Total collected: $870.00 (29 members)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px">
+        <button id="contribToggle" class="btn btn-ghost btn-small" type="button" aria-expanded="false">Show all 29 contributors</button>
+      </div>
+
+      <h3 style="margin:22px 0 10px;font-size:15px;letter-spacing:-.01em">Club tickets purchased</h3>
+      <div class="table-wrap" role="region" aria-label="Club tickets purchased">
+        <table class="purchased-table">
+          <thead><tr><th>Game</th><th>Numbers</th><th>Draw</th><th style="width:70px">Cost</th><th>Result</th><th style="width:52px"><span class="hidden">Actions</span></th></tr></thead>
+          <tbody id="clubBody"></tbody>
+        </table>
+        <div id="clubEmpty" class="empty hidden">No club tickets logged yet — post them in chat and they'll appear here.</div>
+      </div>
+
+      <h3 style="margin:22px 0 10px;font-size:15px;letter-spacing:-.01em">Planned buys</h3>
+      <p class="summary" style="margin:0 0 12px">Round 1 done: Powerball $100 + Mega Millions $150 purchased 10/14. Going forward: 5 Powerball plays + 3 Mega Millions plays per round, 10 draws each ($250/round). With $620 remaining, Rounds 2–3 ($500) fit, leaving ~$120.</p>
+      <div class="table-wrap" role="region" aria-label="Planned buys">
+        <table class="planned-table">
+          <thead><tr><th>Round</th><th>Game</th><th>Plays &times; Draws</th><th>Est. cost</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Round 2</td><td>Powerball</td><td>5 plays &times; 10 draws</td><td class="num">$100.00</td><td><span class="status-planned">Planned</span></td></tr>
+            <tr><td>Round 2</td><td>Mega Millions</td><td>3 plays &times; 10 draws</td><td class="num">$150.00</td><td><span class="status-planned">Planned</span></td></tr>
+            <tr><td>Round 3</td><td>Powerball</td><td>5 plays &times; 10 draws</td><td class="num">$100.00</td><td><span class="status-planned">Planned</span></td></tr>
+            <tr><td>Round 3</td><td>Mega Millions</td><td>3 plays &times; 10 draws</td><td class="num">$150.00</td><td><span class="status-planned">Planned</span></td></tr>
+            <tr><td>Round 4</td><td>Powerball</td><td>5 plays &times; 10 draws</td><td class="num">$100.00</td><td><span class="status-planned">Planned</span></td></tr>
+            <tr><td>Round 4</td><td>Mega Millions</td><td>3 plays &times; 10 draws</td><td class="num">$150.00</td><td><span class="status-planned">Planned</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="form-note" style="margin-top:10px">Planned rows are a projection — post actual purchases in chat and they move into 'Club tickets purchased' with real numbers.</p>
+
+    </section>
+
+    <p class="foot">Protected by a shared club password. This keeps casual viewers out; it is not high-security storage.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const SHARED_PW_HASH='caaadd10340175967a1efa4cfc439d8f0517550515beb5fe59981f4439f05a65';
+  const UNLOCK_KEY='lt_unlocked';
+  const CLUB_KEY='lt_club_tickets';
+  const POT=870;
+
+  const lockView=document.getElementById('lockView');
+  const appView=document.getElementById('appView');
+  const enterForm=document.getElementById('enterForm');
+  const enterError=document.getElementById('enterError');
+  const enterPw=document.getElementById('enterPw');
+  const lockBtn=document.getElementById('lockBtn');
+
+  async function sha256Hex(text){
+    const enc=new TextEncoder().encode(text);
+    const buf=await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function isUnlocked(){
+    try{ return sessionStorage.getItem(UNLOCK_KEY)==='1'; }catch(e){ return false; }
+  }
+  function setUnlocked(){
+    try{ sessionStorage.setItem(UNLOCK_KEY,'1'); }catch(e){}
+  }
+  function clearUnlocked(){
+    try{ sessionStorage.removeItem(UNLOCK_KEY); }catch(e){}
+  }
+
+  function unlock(){
+    lockView.classList.add('hidden');
+    appView.classList.remove('hidden');
+    window.scrollTo(0,0);
+  }
+  function lock(){
+    clearUnlocked();
+    appView.classList.add('hidden');
+    lockView.classList.remove('hidden');
+    enterError.textContent='';
+    enterPw.value='';
+    setTimeout(()=>{ try{enterPw.focus()}catch(e){} },50);
+  }
+
+  // init lock state: stay unlocked across reloads in the same tab
+  if(isUnlocked()){
+    unlock();
+  }else{
+    setTimeout(()=>{ try{enterPw.focus()}catch(e){} },50);
+  }
+
+  enterForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    enterError.textContent='';
+    const trimmed=enterPw.value.trim();
+    if(!trimmed){ enterError.textContent='Enter your password.'; return; }
+    try{
+      const hex=await sha256Hex(trimmed);
+      if(hex===SHARED_PW_HASH){
+        enterPw.value='';
+        setUnlocked();
+        unlock();
+      }else{
+        enterError.textContent='Incorrect password, try again.';
+        enterPw.select();
+      }
+    }catch(err){
+      enterError.textContent='Something went wrong. Try again.';
+    }
+  });
+
+  lockBtn.addEventListener('click', lock);
+
+  // --- Section 1 data ---
+  const plays=[
+    {n:1, whites:[13,14,15,26,28], pb:5},
+    {n:2, whites:[11,22,25,56,63], pb:6},
+    {n:3, whites:[15,23,39,45,65], pb:15},
+    {n:4, whites:[1,13,23,34,62], pb:19},
+    {n:5, whites:[20,33,57,61,69], pb:23},
+  ];
+  // To record a win on a draw, add prize:<amount> to its entry (e.g. prize:100).
+  // The row then gets the gold/green WIN treatment and counts toward the winnings summary.
+  const draws=[
+    {label:'Wed 10/14', winning:{whites:[3,34,37,42,46], pb:20}, best:'Play 4: 1 white ball (34) — no prize'},
+    {label:'Sat 10/17', winning:{whites:[12,13,24,32,35], pb:11}, best:'Plays 1 & 4: 1 white ball (13) — no prize'},
+    {label:'Mon 10/19', winning:{whites:[8,31,32,42,48], pb:23}, best:'Play 5: Powerball only (23), no white balls — $4', prize:4},
+    {label:'Wed 10/21'},
+    {label:'Sat 10/24'},
+    {label:'Mon 10/26'},
+    {label:'Wed 10/28'},
+    {label:'Sat 10/31'},
+    {label:'Mon 11/2'},
+    {label:'Wed 11/4'}
+  ];
+  function ballHTML(num, isRed, small){
+    return '<span class="ball'+(isRed?' red':'')+(small?' small':'')+'">'+num+'</span>';
+  }
+  const playsBody=document.getElementById('playsBody');
+  playsBody.innerHTML=plays.map(p=>{
+    const whites=p.whites.map(n=>ballHTML(n,false,false)).join('');
+    return '<tr><td class="play-num">'+p.n+'</td><td><div class="balls">'+whites+'</div></td><td><div class="balls">'+ballHTML(p.pb,true,false)+'</div></td></tr>';
+  }).join('');
+
+  const drawsBody=document.getElementById('drawsBody');
+  drawsBody.innerHTML=draws.map(function(d){
+    const winCell=d.winning?'<div class="balls">'+d.winning.whites.map(function(n){return ballHTML(n,false,false);}).join('')+ballHTML(d.winning.pb,true,false)+'</div>':'<span class="pending">Pending</span>';
+    const prize=Number(d.prize)||0;
+    const isWin=prize>0;
+    let bestCell;
+    if(isWin){
+      bestCell='<div class="win-line"><span class="win-badge">Win</span><span class="win-prize num">'+fmtMoney(prize)+'</span></div>'+(d.best?String(d.best).replace(/</g,'&lt;'):'');
+    }else{
+      bestCell=d.best?String(d.best).replace(/</g,'&lt;'):'<span class="pending">Pending</span>';
+    }
+    return '<tr'+(isWin?' class="win-row"':'')+'><td style="font-weight:600;white-space:nowrap">'+d.label+'</td><td>'+winCell+'</td><td>'+bestCell+'</td></tr>';
+  }).join('');
+
+  // --- Club Mega Millions run ---
+  const mmPlays=[
+    {n:'A', whites:[5,14,15,25,28], mb:13, mult:'10x'},
+    {n:'B', whites:[6,7,13,33,67], mb:16, mult:'2x'},
+    {n:'C', whites:[14,26,33,55,68], mb:12, mult:'5x'}
+  ];
+  const mmDraws=[
+    {label:'Fri 10/16', winning:{whites:[2,15,31,41,68], mb:11}, best:'No win — best: A matched 1 white (15), C matched 1 white (68); no prize'},
+    {label:'Tue 10/20'},
+    {label:'Fri 10/23'},
+    {label:'Tue 10/27'},
+    {label:'Fri 10/30'},
+    {label:'Tue 11/3'},
+    {label:'Fri 11/6'},
+    {label:'Tue 11/10'},
+    {label:'Fri 11/13'},
+    {label:'Tue 11/17'}
+  ];
+  const mmPlaysBody=document.getElementById('mmPlaysBody');
+  mmPlaysBody.innerHTML=mmPlays.map(p=>{
+    const whites=p.whites.map(n=>ballHTML(n,false,false)).join('');
+    return '<tr><td class="play-num">'+p.n+'</td><td><div class="balls">'+whites+'</div></td><td><div class="balls">'+ballHTML(p.mb,true,false)+'</div></td><td style="font-weight:700">'+p.mult+'</td></tr>';
+  }).join('');
+  const mmDrawsBody=document.getElementById('mmDrawsBody');
+  mmDrawsBody.innerHTML=mmDraws.map(function(d){
+    const winCell=d.winning?'<div class="balls">'+d.winning.whites.map(function(n){return ballHTML(n,false,false);}).join('')+ballHTML(d.winning.mb,true,false)+'</div>':'<span class="pending">Pending</span>';
+    const prize=Number(d.prize)||0;
+    const isWin=prize>0;
+    let bestCell;
+    if(isWin){
+      bestCell='<div class="win-line"><span class="win-badge">Win</span><span class="win-prize num">'+fmtMoney(prize)+'</span></div>'+(d.best?String(d.best).replace(/</g,'&lt;'):'');
+    }else{
+      bestCell=d.best?String(d.best).replace(/</g,'&lt;'):'<span class="pending">Pending</span>';
+    }
+    return '<tr'+(isWin?' class="win-row"':'')+'><td style="font-weight:600;white-space:nowrap">'+d.label+'</td><td>'+winCell+'</td><td>'+bestCell+'</td></tr>';
+  }).join('');
+
+  // --- Winnings summary (totals across both runs) ---
+  (function(){
+    const banner=document.getElementById('winningsBanner');
+    if(!banner) return;
+    const totalEl=document.getElementById('winningsTotal');
+    const detailEl=document.getElementById('winningsDetail');
+    const games=[
+      {game:'Powerball', list:draws},
+      {game:'Mega Millions', list:mmDraws}
+    ];
+    let total=0, winCount=0, biggest=null;
+    games.forEach(function(g){
+      g.list.forEach(function(d){
+        const p=Number(d.prize)||0;
+        if(p>0){
+          total+=p; winCount++;
+          if(!biggest||p>biggest.prize) biggest={prize:p, game:g.game, label:d.label};
+        }
+      });
+    });
+    totalEl.textContent=fmtMoney(total);
+    if(winCount>0 && biggest){
+      banner.classList.add('has-wins');
+      detailEl.textContent=winCount+(winCount===1?' winning draw':' winning draws')+' so far · Biggest win: '+fmtMoney(biggest.prize)+' ('+biggest.game+' · '+biggest.label+')';
+    }else{
+      detailEl.textContent='No winning draws yet across both runs.';
+    }
+  })();
+
+  // --- Date-gated MM buy reminder ---
+  (function(){
+    const el=document.getElementById('mmReminder');
+    if(!el) return;
+    const now=new Date();
+    const today=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
+    if(today>=20261117){
+      el.textContent='⏰ Reminder: the current Mega Millions run ends today — buy the next round: 3 plays × 10 draws (~$150).';
+      el.classList.remove('hidden');
+    }else if(today>=20261104){
+      el.textContent='⏰ Reminder: time to buy the next Mega Millions round — 3 plays × 10 draws (~$150).';
+      el.classList.remove('hidden');
+    }
+  })();
+
+  // --- Section 2 club ---
+  const clubBody=document.getElementById('clubBody');
+  const clubEmpty=document.getElementById('clubEmpty');
+  const budgetLine=document.getElementById('budgetLine');
+  const budgetPill=document.getElementById('budgetPill');
+
+  function formatDateForDisplay(iso){
+    if(!iso) return '—';
+    // iso yyyy-mm-dd
+    try{
+      const parts=iso.split('-');
+      if(parts.length!==3) return iso;
+      const y=parseInt(parts[0],10), m=parseInt(parts[1],10), d=parseInt(parts[2],10);
+      const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[m-1]+' '+d+', '+y;
+    }catch(e){ return iso; }
+  }
+  function parseWhites(str){
+    if(!str) return [];
+    return str.split(/[,\s]+/).map(s=>s.trim()).filter(Boolean).map(s=>parseInt(s,10)).filter(n=>!isNaN(n));
+  }
+
+  const bakedInClubTickets=[
+    {game:'Powerball', plays:[
+      {n:1, whites:[13,14,15,26,28], pb:5},
+      {n:2, whites:[11,22,25,56,63], pb:6},
+      {n:3, whites:[15,23,39,45,65], pb:15},
+      {n:4, whites:[1,13,23,34,62], pb:19},
+      {n:5, whites:[20,33,57,61,69], pb:23}
+    ], draw:'10/14/26–11/4/26 (10 draws)', cost:100, result:'Pending'},
+    {game:'Mega Millions', plays:[
+      {n:'A', whites:[5,14,15,25,28], pb:13, multiplier:'10x'},
+      {n:'B', whites:[6,7,13,33,67], pb:16, multiplier:'2x'},
+      {n:'C', whites:[14,26,33,55,68], pb:12, multiplier:'5x'}
+    ], draw:'10/16/26–11/17/26 (10 draws)', cost:150, result:'Pending'}
+  ];
+
+  function fmtMoney(n){
+    return '$'+(Number(n)||0).toFixed(2);
+  }
+
+  function renderClub(){
+    const tickets=bakedInClubTickets.slice();
+    const spent=tickets.reduce((sum,t)=> sum + (Number(t.cost)||0), 0);
+    const remaining=POT - spent;
+    budgetLine.textContent='Spent: '+fmtMoney(spent)+' · Remaining: '+fmtMoney(remaining)+' of $'+POT;
+    budgetPill.innerHTML='Pot $'+POT+' &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:500">Left</span> <strong>'+fmtMoney(remaining)+'</strong>';
+
+    if(tickets.length===0){
+      clubBody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px 12px">No club tickets logged yet — post them in chat and they\'ll appear here.</td></tr>';
+      if(clubEmpty) clubEmpty.style.display='none';
+      return;
+    }
+    if(clubEmpty) clubEmpty.style.display='none';
+    clubBody.innerHTML=tickets.map((t,idx)=>{
+      let numbersCell='';
+      if(Array.isArray(t.plays) && t.plays.length){
+        numbersCell=t.plays.map(function(p){
+          var w=(p.whites||[]).map(function(n){return ballHTML(n,false,true);}).join('');
+          var pb=(p.pb!=null && p.pb!=='') ? ' '+ballHTML(p.pb,true,true) : '';
+          var mult=p.multiplier ? ' '+String(p.multiplier).replace(/</g,'&lt;') : '';
+          return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;"><span style="font-size:12px;font-weight:700;color:var(--muted);min-width:44px;white-space:nowrap">Play '+p.n+':</span><div class="balls">'+w+pb+'</div>'+(mult?'<span style="font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap">'+mult+'</span>':'')+'</div>';
+        }).join('');
+      }else{
+        const whitesArr=Array.isArray(t.whites)?t.whites:parseWhites(String(t.whites||''));
+        const balls=whitesArr.map(n=>ballHTML(n,false,true)).join('') + (t.ball!=null && t.ball!=='' ? ' '+ballHTML(t.ball,true,true):'');
+        const numbersTextEsc=t.numbersText?String(t.numbersText).replace(/</g,'&lt;'):'';
+        numbersCell=balls?'<div class="balls">'+balls+'</div>':'<span style="color:var(--muted)">'+numbersTextEsc+'</span>';
+      }
+      const gameEsc=String(t.game||'').replace(/</g,'&lt;');
+      const resultEsc=t.result?String(t.result).replace(/</g,'&lt;'):'';
+      const resultCell=resultEsc?(resultEsc==='Pending'?'<span class="pending">Pending</span>':resultEsc):'<span class="pending">Pending</span>';
+      return '<tr>'+
+        '<td style="font-weight:600;white-space:nowrap">'+gameEsc+'</td>'+
+        '<td>'+numbersCell+'</td>'+
+        '<td style="white-space:'+(String(t.draw||'').indexOf('–')!==-1?'normal':'nowrap')+'">'+formatDateForDisplay(t.draw)+'</td>'+
+        '<td class="num">'+fmtMoney(t.cost)+'</td>'+
+        '<td>'+resultCell+'</td>'+
+        '<td></td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  renderClub();
+
+  // --- Contributors collapse: show first 3 rows, toggle the remaining 26 ---
+  (function(){
+    const btn=document.getElementById('contribToggle');
+    const table=document.querySelector('.contrib-table');
+    if(!btn||!table) return;
+    const rows=Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+    const dataRows=rows.filter(function(r){ return !r.querySelector('td[colspan]'); });
+    const extra=dataRows.slice(3);
+    let expanded=false;
+    function apply(){
+      extra.forEach(function(r){ r.classList.toggle('hidden', !expanded); });
+      btn.setAttribute('aria-expanded', expanded?'true':'false');
+      btn.textContent=expanded?'Show less':'Show all 29 contributors';
+    }
+    btn.addEventListener('click', function(){ expanded=!expanded; apply(); });
+    apply();
+  })();
+})();
+</script>
+</body>
+</html>
