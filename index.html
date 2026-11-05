@@ -219,12 +219,12 @@
     <section class="card" aria-labelledby="s1title">
       <div class="section-head">
         <div>
-          <h2 id="s1title">My Powerball · 10-draw run</h2>
+          <h2 id="s1title">Powerball · 10-draw run</h2>
           <p class="summary">5 plays · $2 per play · 10 draws · $100 total · no Power Play</p>
         </div>
       </div>
 
-      <div class="table-wrap" role="region" aria-label="My plays">
+      <div class="table-wrap" role="region" aria-label="Plays">
         <table>
           <thead><tr><th style="width:52px">Play</th><th>White balls</th><th style="width:96px">Powerball</th></tr></thead>
           <tbody id="playsBody"></tbody>
@@ -245,7 +245,7 @@
     <section class="card" aria-labelledby="pb2title">
       <div class="section-head">
         <div>
-          <h2 id="pb2title">My Powerball · Round 2 · 10-draw run</h2>
+          <h2 id="pb2title">Powerball · Round 2 · 10-draw run</h2>
           <p class="summary">5 plays · $2 per play · 10 draws · $100 total · no Power Play · no Double Play · purchased Nov 5, 2026</p>
         </div>
       </div>
@@ -646,19 +646,19 @@
       {n:3, whites:[15,23,39,45,65], pb:15},
       {n:4, whites:[1,13,23,34,62], pb:19},
       {n:5, whites:[20,33,57,61,69], pb:23}
-    ], draw:'10/14/26–11/4/26 (10 draws)', cost:100, result:'Pending'},
+    ], draw:'10/14/26–11/4/26 (10 draws)', cost:100, result:''},
     {game:'Mega Millions', plays:[
       {n:'A', whites:[5,14,15,25,28], pb:13, multiplier:'10x'},
       {n:'B', whites:[6,7,13,33,67], pb:16, multiplier:'2x'},
       {n:'C', whites:[14,26,33,55,68], pb:12, multiplier:'5x'}
-    ], draw:'10/16/26–11/17/26 (10 draws)', cost:150, result:'Pending'},
+    ], draw:'10/16/26–11/17/26 (10 draws)', cost:150, result:''},
     {game:'Powerball', plays:[
       {n:'A', whites:[24,26,43,52,67], pb:24},
       {n:'B', whites:[17,42,44,60,69], pb:10},
       {n:'C', whites:[12,27,54,63,68], pb:23},
       {n:'D', whites:[11,24,34,40,58], pb:17},
       {n:'E', whites:[3,28,43,52,58], pb:23}
-    ], draw:'11/7/26–11/28/26 (10 draws)', cost:100, result:'Pending'}
+    ], draw:'11/7/26–11/28/26 (10 draws)', cost:100, result:''}
   ];
 
   function fmtMoney(n){
@@ -695,7 +695,7 @@
       }
       const gameEsc=String(t.game||'').replace(/</g,'&lt;');
       const resultEsc=t.result?String(t.result).replace(/</g,'&lt;'):'';
-      const resultCell=resultEsc?(resultEsc==='Pending'?'<span class="pending">Pending</span>':resultEsc):'<span class="pending">Pending</span>';
+      const resultCell=(resultEsc && resultEsc!=='Pending')?resultEsc:'';
       return '<tr>'+
         '<td style="font-weight:600;white-space:nowrap">'+gameEsc+'</td>'+
         '<td>'+numbersCell+'</td>'+
