@@ -294,6 +294,32 @@
       <p class="form-note" style="margin-top:10px">Draws are Tue / Fri nights. Winning numbers will be filled in after each draw.</p>
     </section>
 
+    <!-- Mega Millions Round 2 -->
+    <section class="card" aria-labelledby="mm2Title">
+      <div class="section-head">
+        <div>
+          <h2 id="mm2Title">Mega Millions · Round 2 · 10-draw run</h2>
+          <p class="summary">3 plays · $5 per play · 10 draws · $150 total · built-in multipliers as printed · purchased Nov 23, 2026</p>
+        </div>
+      </div>
+
+      <div class="table-wrap" role="region" aria-label="Mega Millions Round 2 plays">
+        <table>
+          <thead><tr><th style="width:52px">Play</th><th>White balls</th><th style="width:96px">Mega Ball</th><th style="width:96px">Multiplier</th></tr></thead>
+          <tbody id="mm2PlaysBody"></tbody>
+        </table>
+      </div>
+
+      <h3 style="margin:22px 0 10px;font-size:15px;letter-spacing:-.01em">Draw schedule &amp; results</h3>
+      <div class="table-wrap" role="region" aria-label="Mega Millions Round 2 draw schedule and results">
+        <table>
+          <thead><tr><th>Draw</th><th>Winning numbers</th><th>Best result</th></tr></thead>
+          <tbody id="mm2DrawsBody"></tbody>
+        </table>
+      </div>
+      <p class="form-note" style="margin-top:10px">Draws are Tue / Fri nights, Nov 24–Dec 25. Winning numbers will be filled in after each draw.</p>
+    </section>
+
     <!-- Section 2 -->
     <section class="card" aria-labelledby="s2title">
       <div class="section-head">
@@ -356,13 +382,13 @@
       </div>
 
       <h3 style="margin:22px 0 10px;font-size:15px;letter-spacing:-.01em">Planned buys</h3>
-      <p class="summary" style="margin:0 0 12px">Round 1 done: Powerball $100 + Mega Millions $150 purchased 10/14. Round 2 Powerball $100 purchased 11/5 (draws 11/7–11/28). Going forward: 5 Powerball plays + 3 Mega Millions plays per round, 10 draws each ($250/round). With $520 remaining, the Round 2 Mega Millions ($150) + Round 3 ($250) fit, leaving ~$120.</p>
+      <p class="summary" style="margin:0 0 12px">Round 1 done: Powerball $100 + Mega Millions $150 purchased 10/14. Round 2 Powerball $100 purchased 11/5 (draws 11/7–11/28). Round 2 Mega Millions $150 purchased 11/23 (draws 11/24–12/25). Going forward: 5 Powerball plays + 3 Mega Millions plays per round, 10 draws each ($250/round). With $370 remaining, the planned Powerball Round 3 ($100, 10 draws from Nov 30) fits, leaving about $270.</p>
       <div class="table-wrap" role="region" aria-label="Planned buys">
         <table class="planned-table">
           <thead><tr><th>Round</th><th>Game</th><th>Plays &times; Draws</th><th>Est. cost</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td>Round 2</td><td>Powerball</td><td>5 plays &times; 10 draws</td><td class="num">$100.00</td><td><span class="status-purchased">Purchased</span></td></tr>
-            <tr><td>Round 2</td><td>Mega Millions</td><td>3 plays &times; 10 draws</td><td class="num">$150.00</td><td><span class="status-planned">Planned</span></td></tr>
+            <tr><td>Round 2</td><td>Mega Millions</td><td>3 plays &times; 10 draws</td><td class="num">$150.00</td><td><span class="status-purchased">Purchased</span></td></tr>
             <tr><td>Round 3</td><td>Powerball</td><td>5 plays &times; 10 draws</td><td class="num">$100.00</td><td><span class="status-planned">Planned</span></td></tr>
             <tr><td>Round 3</td><td>Mega Millions</td><td>3 plays &times; 10 draws</td><td class="num">$150.00</td><td><span class="status-planned">Planned</span></td></tr>
             <tr><td>Round 4</td><td>Powerball</td><td>5 plays &times; 10 draws</td><td class="num">$100.00</td><td><span class="status-planned">Planned</span></td></tr>
@@ -572,6 +598,47 @@
     return '<tr'+(isWin?' class="win-row"':'')+'><td style="font-weight:600;white-space:nowrap">'+d.label+'</td><td>'+winCell+'</td><td>'+bestCell+'</td></tr>';
   }).join('');
 
+  // --- Mega Millions Round 2 run (purchased Nov 23, 2026) ---
+  const mm2Plays=[
+    {n:'A', whites:[5,43,48,54,61], mb:24, mult:'2x'},
+    {n:'B', whites:[12,29,51,55,59], mb:3, mult:'2x'},
+    {n:'C', whites:[3,11,15,23,37], mb:22, mult:'3x'}
+  ];
+  const mm2Draws=[
+    {label:'Tue 11/24'},
+    {label:'Fri 11/27'},
+    {label:'Tue 12/1'},
+    {label:'Fri 12/4'},
+    {label:'Tue 12/8'},
+    {label:'Fri 12/11'},
+    {label:'Tue 12/15'},
+    {label:'Fri 12/18'},
+    {label:'Tue 12/22'},
+    {label:'Fri 12/25'}
+  ];
+  const mm2PlaysBody=document.getElementById('mm2PlaysBody');
+  if(mm2PlaysBody){
+    mm2PlaysBody.innerHTML=mm2Plays.map(p=>{
+      const whites=p.whites.map(n=>ballHTML(n,false,false)).join('');
+      return '<tr><td class="play-num">'+p.n+'</td><td><div class="balls">'+whites+'</div></td><td><div class="balls">'+ballHTML(p.mb,true,false)+'</div></td><td style="font-weight:700">'+p.mult+'</td></tr>';
+    }).join('');
+  }
+  const mm2DrawsBody=document.getElementById('mm2DrawsBody');
+  if(mm2DrawsBody){
+    mm2DrawsBody.innerHTML=mm2Draws.map(function(d){
+      const winCell=d.winning?'<div class="balls">'+d.winning.whites.map(function(n){return ballHTML(n,false,false);}).join('')+ballHTML(d.winning.mb,true,false)+'</div>':'<span class="pending">Pending</span>';
+      const prize=Number(d.prize)||0;
+      const isWin=prize>0;
+      let bestCell;
+      if(isWin){
+        bestCell='<div class="win-line"><span class="win-badge">Win</span><span class="win-prize num">'+fmtMoney(prize)+'</span></div>'+(d.best?String(d.best).replace(/</g,'&lt;'):'');
+      }else{
+        bestCell=d.best?String(d.best).replace(/</g,'&lt;'):'<span class="pending">Pending</span>';
+      }
+      return '<tr'+(isWin?' class="win-row"':'')+'><td style="font-weight:600;white-space:nowrap">'+d.label+'</td><td>'+winCell+'</td><td>'+bestCell+'</td></tr>';
+    }).join('');
+  }
+
   // --- Winnings summary (totals across both runs) ---
   (function(){
     const banner=document.getElementById('winningsBanner');
@@ -581,7 +648,8 @@
     const games=[
       {game:'Powerball', list:draws},
       {game:'Powerball Round 2', list:pb2Draws},
-      {game:'Mega Millions', list:mmDraws}
+      {game:'Mega Millions', list:mmDraws},
+      {game:'Mega Millions Round 2', list:mm2Draws}
     ];
     let total=0, winCount=0, biggest=null;
     games.forEach(function(g){
@@ -658,7 +726,12 @@
       {n:'C', whites:[12,27,54,63,68], pb:23},
       {n:'D', whites:[11,24,34,40,58], pb:17},
       {n:'E', whites:[3,28,43,52,58], pb:23}
-    ], draw:'11/7/26–11/28/26 (10 draws)', cost:100, result:''}
+    ], draw:'11/7/26–11/28/26 (10 draws)', cost:100, result:''},
+    {game:'Mega Millions', plays:[
+      {n:'A', whites:[5,43,48,54,61], pb:24, multiplier:'2x'},
+      {n:'B', whites:[12,29,51,55,59], pb:3, multiplier:'2x'},
+      {n:'C', whites:[3,11,15,23,37], pb:22, multiplier:'3x'}
+    ], draw:'11/24/26–12/25/26 (10 draws)', cost:150, result:''}
   ];
 
   function fmtMoney(n){
